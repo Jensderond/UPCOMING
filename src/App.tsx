@@ -3,34 +3,43 @@ import './App.css';
 import Tile from './components/Tile';
 import IState from './utils/IState';
 
-const fontStyle = {
-  color: '#85bb65',
-  fontSize: '3em' 
-}
+import Modal from './components/Modal';
+import Navbar from './components/Navbar';
+// import Login from './components/Login';
 
 class App extends React.Component<{}, IState> {
   constructor(props: React.ReactPropTypes) {
     super(props);
     this.state = {
-      currency: "€"
+      currency: "€",
+      modalState: ""
     };
+    this.openModel = this.openModel.bind(this);
+    this.closeModel = this.closeModel.bind(this);
   }
 
+  public openModel(): void {
+    this.setState({
+      modalState: "is-active"
+    });
+  }
+
+  public closeModel(): void {
+    this.setState({
+      modalState: ""
+    });
+  }
+
+// REMINDER: use Noty library for notifications!!
   public render() {
     return (
       <div className="App">
-        
-        <div style= { fontStyle }>
-          <i className="fas fa-money-check-alt" />
-        </div>
+        <Navbar
+          title="Navbar"
+          openModal={ this.openModel }
+        />
         <section className="section">
           <div className="container">
-            <h1 className="title">
-              UPCOMING
-            </h1>
-            <p className="subtitle">
-              See where your <strong>Money</strong> is going!
-            </p>
 
             <Tile 
               currency={ this.state.currency } 
@@ -40,6 +49,11 @@ class App extends React.Component<{}, IState> {
             
           </div>
         </section>
+        <Modal 
+          title="LOGIN"
+          modalState={ this.state.modalState }
+          closeModal={ this.closeModel }
+        />
       </div>
     );
   }
