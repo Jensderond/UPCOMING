@@ -5,7 +5,7 @@ import Login from '../components/Login';
 interface IProps {
     title: string;
     modalState: string;
-    closeModal: () => void
+    closeModal: () => void;
 }
 
 interface IState {
@@ -17,8 +17,8 @@ class Modal extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.closeModal = this.closeModal.bind(this);
-
     }
+
     public closeModal() {
         this.props.closeModal();
     }
@@ -32,6 +32,7 @@ class Modal extends React.Component<IProps, IState> {
                         { this.props.title }
                         <Login
                             title="Login"
+                            closeModal={ this.closeModal }
                         />
                     </div> 
                 </div>

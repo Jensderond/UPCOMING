@@ -14,17 +14,17 @@ class App extends React.Component<{}, IState> {
       currency: "€",
       modalState: ""
     };
-    this.openModel = this.openModel.bind(this);
-    this.closeModel = this.closeModel.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
-  public openModel(): void {
+  public openModal(): void {
     this.setState({
       modalState: "is-active"
     });
   }
 
-  public closeModel(): void {
+  public closeModal(): void {
     this.setState({
       modalState: ""
     });
@@ -36,7 +36,7 @@ class App extends React.Component<{}, IState> {
       <div className="App">
         <Navbar
           title="Navbar"
-          openModal={ this.openModel }
+          openModal={ this.openModal }
         />
         <section className="section">
           <div className="container">
@@ -52,7 +52,7 @@ class App extends React.Component<{}, IState> {
         <Modal 
           title="LOGIN"
           modalState={ this.state.modalState }
-          closeModal={ this.closeModel }
+          closeModal={ this.closeModal }
         />
       </div>
     );

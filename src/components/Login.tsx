@@ -1,16 +1,17 @@
 import * as React from 'react';
 
-// import axios from 'axios';
+import axios from 'axios';
 import './styles/Sidebar.css';
 
 interface IProps {
-    title: string
+    title: string;
+    closeModal: () => void;
 }
 
 interface IState {
-    email: string,
-    emailClass: string,
+    errorMessage: string,
     password: string,
+    passwordClass: string,
     username: string,
     usernameClass: string
 }
@@ -21,16 +22,18 @@ class Login extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            email: "",
-            emailClass: "input",
+            errorMessage: "",
             password: "",
+            passwordClass: "",
             username: "",
-            usernameClass: "input"
+            usernameClass: ""
         };
 
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.dismissNotification = this.dismissNotification.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleUsernameChange = this.handleUsernameChange.bind(this);
     }
 
     public handleUsernameChange(event: any) {
@@ -42,57 +45,99 @@ class Login extends React.Component<IProps, IState> {
     }
 
     public handleLogin(event: any): boolean {
-        // axios.post("http://")
+
+        if ( this.state.username === "" && this.state.password === "" ) {
+            this.setState({ 
+                passwordClass: "is-danger",
+                usernameClass: "is-danger"
+            });
+            return false;
+        } else if ( this.state.username === "" && this.state.password !== "" ) {
+            this.setState({ 
+                passwordClass: "",
+                usernameClass: "is-danger"
+            });
+            return false;
+        } else if ( this.state.username !== "" && this.state.password === "" ) {
+            this.setState({ 
+                passwordClass: "is-danger",
+                usernameClass: ""
+            });
+            return false;
+        }
+
+        axios.post("http://localhost:3010/api/authenticate", {
+            password: this.state.password,
+            username: this.state.username
+        })
+        .then( (response) => {
+            if ( response.data.success !== true ) {
+                this.setState({
+                    errorMessage: response.data.message
+                })
+                return false;
+            }
+
+            sessionStorage.setItem("jwtToken", response.data.token);
+            this.closeModal();
+            return true;
+        })
+        .catch((error) =>{
+            this.setState({
+                errorMessage: "Sorry something went wrong on our side."
+            })
+        });
 
         return false;
     }
 
+    public closeModal(): void {
+        this.props.closeModal();
+    }
+
+    public dismissNotification(): void {
+        this.setState({
+            errorMessage: ""
+        })
+    }
+
     public render() {
+        const errorMessage = this.state.errorMessage;
+
         return (
             <div className="uc-sidebar" >
                 <div className="container">
+                    { errorMessage !== "" ?
+                    <div className="notification is-danger">
+                        <button className="delete" onClick={ this.dismissNotification }/>
+                        { this.state.errorMessage }
+                    </div>
+                    : ""
+                    }
                     <div className="field">
                         <div className="field">
                             <label className="label">Username</label>
                             <div className="control has-icons-left has-icons-right">
-                                <input className={ this.state.usernameClass } type="text" placeholder="Text input" defaultValue="username" />
+                                <input className={ "input " + this.state.usernameClass } type="text" placeholder="JohnDoe" onChange={ this.handleUsernameChange }/>
                                 <span className="icon is-small is-left">
                                     <i className="fas fa-user" />
                                 </span>
-                                <span className="icon is-small is-right">
-                                    <i className="fas fa-check" />
-                                </span>
                             </div>
-                            <p className="help is-success">This username is available</p>
-                        </div>
-
-                        <div className="field">
-                            <label className="label">Email</label>
-                            <div className="control has-icons-left has-icons-right">
-                                <input className={ this.state.emailClass } type="email" placeholder="Email input" defaultValue="johndoe@example.com" />
-                                <span className="icon is-small is-left">
-                                    <i className="fas fa-envelope" />
-                                </span>
-                                <span className="icon is-small is-right">
-                                    <i className="fas fa-exclamation-triangle" />
-                                </span>
-                            </div>
-                            <p className="help is-danger">This email is invalid</p>
                         </div>
 
                         <div className="field">
                             <label className="label">Password</label>
                             <div className="control">
-                                <input className="input" type="password" placeholder="" />
+                                <input className={ "input " + this.state.passwordClass } type="password" placeholder="" onChange={ this.handlePasswordChange }/>
                             </div>
                         </div>
 
                         <div className="field is-grouped">
                             <div className="control">
-                                <button className="button is-link">Submit</button>
+                                <button className="button is-link" onClick={ this.handleLogin }>Submit</button>
                             </div>
                             <div className="control">
-                                <button className="button is-text">Cancel</button>
+                                <button className="button is-text" onClick={ this.closeModal }>Cancel</button>
                             </div>
                         </div>
                     </div>

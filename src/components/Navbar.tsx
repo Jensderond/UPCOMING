@@ -12,11 +12,21 @@ interface IProps {
     openModal: (type: string) => void;
 }
 
-class Navbar extends React.Component<IProps> {
+interface IState {
+    navbarClass: string;
+}
+
+class Navbar extends React.Component<IProps, IState> {
 
     constructor(props: IProps){
         super(props);
+
+        this.state = {
+            navbarClass: ""
+        }
+
         this.handleLoginClick = this.handleLoginClick.bind(this);
+        this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
     }
 
     public handleLoginClick(event :any): void {
@@ -24,11 +34,23 @@ class Navbar extends React.Component<IProps> {
         this.props.openModal(type);
     }
 
+    public toggleMobileMenu(): void {
+        if ( this.state.navbarClass === "" ) {
+            this.setState({
+                navbarClass: "is-active"
+            });
+        } else {
+            this.setState({
+                navbarClass: ""
+            });
+        }
+    }
+
     public render() {
         return (
             <nav className="navbar is-transparent">
                 <div className="navbar-brand">
-                    <a className="navbar-item" href="https://bulma.io">
+                    <a className="navbar-item" href="http://localhost:3000/">
                         <span className="icon" style={ fontStyle }>
                             <i className="fas fa-money-check-alt" />
                         </span>
@@ -36,47 +58,22 @@ class Navbar extends React.Component<IProps> {
                             UPCOMING
                         </span>
                     </a>
-                    <div className="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                    <div className={ "navbar-burger burger " + this.state.navbarClass } data-target="upcomingNavbar" onClick={ this.toggleMobileMenu }>
                         <span />
                         <span />
                         <span />
                     </div>
                 </div>
 
-                <div id="navbarExampleTransparentExample" className="navbar-menu">
+                <div id="upcomingNavbar" className={ "navbar-menu " + this.state.navbarClass }>
                     <div className="navbar-start">
-                    <a className="navbar-item" href="https://bulma.io/">
+                    <a className="navbar-item" href="http://localhost:3000/">
                         Home
                     </a>
-                    <div className="navbar-item has-dropdown is-hoverable">
-                        <a className="navbar-link" href="/documentation/overview/start/">
+                    <a className="navbar-item" href="/documentation/overview/start/">
                         Docs
-                        </a>
-                        <div className="navbar-dropdown is-boxed">
-                            <a className="navbar-item" href="/documentation/overview/start/">
-                                Overview
-                            </a>
-                            <a className="navbar-item" href="https://bulma.io/documentation/modifiers/syntax/">
-                                Modifiers
-                            </a>
-                            <a className="navbar-item" href="https://bulma.io/documentation/columns/basics/">
-                                Columns
-                            </a>
-                            <a className="navbar-item" href="https://bulma.io/documentation/layout/container/">
-                                Layout
-                            </a>
-                            <a className="navbar-item" href="https://bulma.io/documentation/form/general/">
-                                Form
-                            </a>
-                            <hr className="navbar-divider" />
-                            <a className="navbar-item" href="https://bulma.io/documentation/elements/box/">
-                                Elements
-                            </a>
-                            <a className="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
-                                Components
-                            </a>
-                        </div>
-                    </div>
+                    </a>
+                
                     </div>
 
                     <div className="navbar-end">
