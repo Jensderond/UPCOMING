@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import axios from 'axios';
+import * as Noty from 'noty';
+import { API_ENDPOINT } from '../utils/api-config'
 import './styles/Sidebar.css';
 
 interface IProps {
@@ -45,6 +47,7 @@ class Login extends React.Component<IProps, IState> {
     }
 
     public handleLogin(event: any): boolean {
+        event.preventDefault();
 
         if ( this.state.username === "" && this.state.password === "" ) {
             this.setState({ 
@@ -66,7 +69,7 @@ class Login extends React.Component<IProps, IState> {
             return false;
         }
 
-        axios.post("http://localhost:3010/api/authenticate", {
+        axios.post( API_ENDPOINT + "authenticate", {
             password: this.state.password,
             username: this.state.username
         })
@@ -77,12 +80,19 @@ class Login extends React.Component<IProps, IState> {
                 })
                 return false;
             }
+            localStorage.setItem("jwtToken", response.data.token);
+            
+            new Noty({
+                text: 'Welcome ' + response.data.username,
+                theme: 'nest',
+                timeout: 3000,
+                type: 'success',
+            }).show();
 
-            sessionStorage.setItem("jwtToken", response.data.token);
-            this.closeModal();
+            this.closeModal(event);
             return true;
         })
-        .catch((error) =>{
+        .catch(() =>{
             this.setState({
                 errorMessage: "Sorry something went wrong on our side."
             })
@@ -91,7 +101,8 @@ class Login extends React.Component<IProps, IState> {
         return false;
     }
 
-    public closeModal(): void {
+    public closeModal(event: any): void {
+        event.preventDefault();
         this.props.closeModal();
     }
 
@@ -114,33 +125,38 @@ class Login extends React.Component<IProps, IState> {
                     </div>
                     : ""
                     }
-                    <div className="field">
+                    <form>
                         <div className="field">
-                            <label className="label">Username</label>
-                            <div className="control has-icons-left has-icons-right">
-                                <input className={ "input " + this.state.usernameClass } type="text" placeholder="JohnDoe" onChange={ this.handleUsernameChange }/>
-                                <span className="icon is-small is-left">
-                                    <i className="fas fa-user" />
-                                </span>
+                            <div className="field">
+                                <label className="label">Username</label>
+                                <div className="control has-icons-left has-icons-right">
+                                    <input className={ "input " + this.state.usernameClass } type="text" placeholder="JohnDoe" onChange={ this.handleUsernameChange }/>
+                                    <span className="icon is-small is-left">
+                                        <i className="fas fa-user" />
+                                    </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="field">
-                            <label className="label">Password</label>
-                            <div className="control">
-                                <input className={ "input " + this.state.passwordClass } type="password" placeholder="" onChange={ this.handlePasswordChange }/>
+                            <div className="field">
+                                <label className="label">Password</label>
+                                <div className="control has-icons-left has-icons-right">
+                                    <input className={ "input " + this.state.passwordClass } type="password" placeholder="" onChange={ this.handlePasswordChange }/>
+                                    <span className="icon is-small is-left">
+                                        <i className="fas fa-lock" />
+                                    </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="field is-grouped">
-                            <div className="control">
-                                <button className="button is-link" onClick={ this.handleLogin }>Submit</button>
-                            </div>
-                            <div className="control">
-                                <button className="button is-text" onClick={ this.closeModal }>Cancel</button>
+                            <div className="field is-grouped">
+                                <div className="control">
+                                    <button className="button is-link" onClick={ this.handleLogin }>Submit</button>
+                                </div>
+                                <div className="control">
+                                    <button className="button is-text" onClick={ this.closeModal }>Cancel</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         );

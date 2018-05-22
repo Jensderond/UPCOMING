@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 
 import 'bulma/css/bulma.css';
+import 'noty/lib/noty.js';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 

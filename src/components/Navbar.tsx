@@ -10,6 +10,8 @@ const fontStyle = {
 interface IProps {
     title: string,
     openModal: (type: string) => void;
+    logOut: () => void;
+    isLoggedIn: boolean;
 }
 
 interface IState {
@@ -26,12 +28,17 @@ class Navbar extends React.Component<IProps, IState> {
         }
 
         this.handleLoginClick = this.handleLoginClick.bind(this);
+        this.handleLogoutClick = this.handleLogoutClick.bind(this);
         this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
     }
 
     public handleLoginClick(event :any): void {
         const type = event.currentTarget.dataset.id;
         this.props.openModal(type);
+    }
+
+    public handleLogoutClick(): void {
+        this.props.logOut();
     }
 
     public toggleMobileMenu(): void {
@@ -77,25 +84,37 @@ class Navbar extends React.Component<IProps, IState> {
                     </div>
 
                     <div className="navbar-end">
-                    <div className="navbar-item">
-                        <div className="field is-grouped">
-                        <p className="control">
-                            <a className="bd-tw-button button">
-                                <span>
-                                    Register
-                                </span>
-                            </a>
-                        </p>
-                        <p className="control">
-                            <a className="button is-primary" onClick={ this.handleLoginClick } data-id="LOGIN">
-                                <span>Login</span>
-                            </a>            
-                        </p>
-                        </div>
-                    </div>
+                        { this.props.isLoggedIn ?
+                            <div className="navbar-item">
+                                <div className="field is-grouped">
+                                <p className="control">
+                                    <a className="button is-warning" onClick={ this.handleLogoutClick } data-id="LOGOUT">
+                                        <span>Logout</span>
+                                    </a>            
+                                </p>
+                                </div>
+                            </div>
+                        : 
+                            <div className="navbar-item">
+                                <div className="field is-grouped">
+                                <p className="control">
+                                    <a className="bd-tw-button button">
+                                        <span>
+                                            Register
+                                        </span>
+                                    </a>
+                                </p>
+                                <p className="control">
+                                    <a className="button is-primary" onClick={ this.handleLoginClick } data-id="LOGIN">
+                                        <span>Login</span>
+                                    </a>            
+                                </p>
+                                </div>
+                            </div>
+                        }
+                        
                     </div>
                 </div>
-            
                             
             </nav>
             
