@@ -8,6 +8,7 @@ import './styles/Sidebar.css';
 interface IProps {
     title: string;
     closeModal: () => void;
+    switchButton: () => void;
 }
 
 interface IState {
@@ -36,6 +37,8 @@ class Login extends React.Component<IProps, IState> {
         this.handleLogin = this.handleLogin.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
+        this.switchButton = this.switchButton.bind(this);
+        
     }
 
     public handleUsernameChange(event: any) {
@@ -106,6 +109,11 @@ class Login extends React.Component<IProps, IState> {
         this.props.closeModal();
     }
 
+    public switchButton(event: any): void {
+        event.preventDefault();
+        this.props.switchButton();
+    }
+
     public dismissNotification(): void {
         this.setState({
             errorMessage: ""
@@ -149,10 +157,10 @@ class Login extends React.Component<IProps, IState> {
 
                             <div className="field is-grouped">
                                 <div className="control">
-                                    <button className="button is-link" onClick={ this.handleLogin }>Submit</button>
+                                    <button className="button is-primary" onClick={ this.handleLogin }>Login</button>
                                 </div>
                                 <div className="control">
-                                    <button className="button is-text" onClick={ this.closeModal }>Cancel</button>
+                                    <button className="button is-text" onClick={ this.switchButton }>Or create an account</button>
                                 </div>
                             </div>
                         </div>
