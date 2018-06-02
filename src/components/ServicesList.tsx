@@ -1,7 +1,8 @@
 import * as React from 'react';
+import Tile from "./Tile";
 
 interface IProps {
-    title: string;
+    currency: string,
 }
 
 class ServicesList extends React.Component<IProps> {
@@ -12,7 +13,16 @@ class ServicesList extends React.Component<IProps> {
 
     public render() {
         return (
-            <div />
+            <section>
+
+
+                <Tile
+                    currency={ this.props.currency }
+                    color="#1ed760"
+                    title="Spotify"
+                />
+
+            </section>
         );
     }
 }

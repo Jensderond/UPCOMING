@@ -1,10 +1,11 @@
 import * as React from 'react';
 import './App.css';
-import Tile from './components/Tile';
 
-import { BrowserRouter } from 'react-router-dom';
-import Modal from './components/Modal';
+import {BrowserRouter, Route} from 'react-router-dom';
+import Modal from './components/Authentication/Modal';
 import Navbar from './components/Navbar';
+import NewService from "./components/Service/NewService";
+import ServicesList from "./components/ServicesList";
 import { isLoggedIn, logOut } from './utils/helpers/Authentication';
 
 interface IState {
@@ -86,27 +87,23 @@ class App extends React.Component<{}, IState> {
             />
             <section className="section">
               <div className="container">
-                <Tile 
-                  currency={ this.state.currency } 
-                  color="#1ed760"
-                  title="Spotify"
-                  />
 
-                {/*
-                <PrivateRoute 
+                <Route
                   exact={true}
-                  component={Tile}
+                  path="/"
+                  // tslint:disable-next-line:jsx-no-lambda
+                  render={() => (
+                      <ServicesList currency={this.state.currency} />
+                  )}
                 />
-                */
-                } 
+                <Route
+                    exact={true}
+                    path="/services/newService"
+                    component={NewService}
+                />
                 
               </div>
             </section>
-            <Modal 
-              title="LOGIN"
-              modalState={ this.state.modalState }
-              closeModal={ this.closeModal }
-            />
           </div>
         </BrowserRouter>
       );

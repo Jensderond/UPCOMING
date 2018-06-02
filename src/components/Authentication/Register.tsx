@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import axios from 'axios';
 import * as Noty from 'noty';
-import { API_ENDPOINT } from '../utils/api-config'
+import { API_ENDPOINT } from '../../utils/api-config'
 
 interface IProps {
     title: string;
@@ -14,14 +14,13 @@ interface IState {
     email: string,
     emailCheckIcon: string,
     emailClass: string,
-    emailValid: boolean,
     emailValidMessage: string,
+    errorMessage: string,
     password: string,
     passwordClass: string,
     username: string,
     usernameCheckIcon: string,
     usernameClass: string,
-    usernameValid: boolean,
     usernameValidMessage: string
 }
 
@@ -34,14 +33,13 @@ class Register extends React.Component<IProps, IState> {
             email: "",
             emailCheckIcon: "",
             emailClass: "",
-            emailValid: false,
             emailValidMessage: "",
+            errorMessage: "",
             password: "",
             passwordClass: "",
             username: "",
             usernameCheckIcon: "",
             usernameClass: "",
-            usernameValid: false,
             usernameValidMessage: ""
         };
         
@@ -53,49 +51,22 @@ class Register extends React.Component<IProps, IState> {
         this.switchButton = this.switchButton.bind(this);
     }
 
-    public checkUsernameInBackend(username: string) {
-        return axios.post( API_ENDPOINT + "checkUsername/" + username);
-    }
-
-    public checkEmailInBackend(email: string) {
-        return axios.post( API_ENDPOINT + "checkEmail/" + email);
-    }
-
     public async handleUsernameChange(event: any) {
         const usernameChange = event.target.value;
         if ( usernameChange === "" ){
             this.setState({ 
                 username: "",
-                usernameClass: "",
-                usernameValid: false,
+                usernameClass: "is-danger",
                 usernameValidMessage: ""
             });
             return;
+        } else {
+            this.setState( {
+                username: usernameChange,
+                usernameClass: "is-success",
+                usernameValidMessage: ""
+            })
         }
-        
-        this.checkUsernameInBackend( usernameChange )
-            .then( (res) => {
-                const usernameAvailable = res.data !== true;
-                if ( usernameAvailable ) {
-                    this.setState({ 
-                        username: usernameChange,
-                        usernameClass: "is-success",
-                        usernameValid: true,
-                        usernameValidMessage: "Alright!"
-                    });
-                } else {
-                    this.setState({ 
-                        username: usernameChange,
-                        usernameClass: "is-danger",
-                        usernameValid: false,
-                        usernameValidMessage: "This username is already in use!"
-                    });
-                }
-            }).catch((err) => {
-                // tslint:disable-next-line:no-console
-                console.error(err);
-            });
-        
     }
 
     public handlePasswordChange(event: any) {
@@ -114,39 +85,17 @@ class Register extends React.Component<IProps, IState> {
                 emailValidMessage: ""
             });
             return;
-        }
-        
-        this.checkEmailInBackend( emailChange )
-            .then( (res) => {
-                const emailAvailable = res.data !== true;
-                if ( emailAvailable ) {
-                    this.setState({ 
-                        email: emailChange,
-                        emailClass: "is-success",
-                        emailValidMessage: "Great!"
-                    });
-                } else {
-                    this.setState({ 
-                        email: emailChange,
-                        emailClass: "is-danger",
-                        emailValidMessage: "This email is already in use!"
-                    });
-                }
-            }).catch((err) => {
-                // tslint:disable-next-line:no-console
-                console.error(err);
+        } else {
+            this.setState({
+                email: emailChange,
+                emailClass: "is-success",
+                emailValidMessage: ""
             });
+        }
     }
 
     public handleRegister() {
-        if ( !this.state.usernameValid ) {
-            this.setState({ 
-                usernameClass: "is-danger",
-                usernameValidMessage: "This username is not valid!"
-            });
-            return false;
-        }
-        else if ( this.state.username === "" && this.state.password === "" ) {
+        if ( this.state.username === "" && this.state.password === "" ) {
             this.setState({ 
                 passwordClass: "is-danger",
                 usernameClass: "is-danger"
@@ -166,13 +115,34 @@ class Register extends React.Component<IProps, IState> {
             return false;
         }
 
+        axios.post( API_ENDPOINT + "register", {
+            email: this.state.email,
+            password: this.state.password,
+            username: this.state.username
+        })
+            .then( (response) => {
+                if ( response.data.success !== true ) {
+                    this.setState({
+                        errorMessage: response.data.message
+                    })
+                    return false;
+                }
 
-        new Noty({
-            text: 'User created with username: ' + this.state.username,
-            theme: 'nest',
-            timeout: 3000,
-            type: 'success',
-        }).show();
+                new Noty({
+                    text: 'Welcome ' + response.data.username,
+                    theme: 'nest',
+                    timeout: 3000,
+                    type: 'success',
+                }).show();
+
+                this.closeModal(event);
+                return true;
+            })
+            .catch(() =>{
+                this.setState({
+                    errorMessage: "Sorry something went wrong on our side."
+                })
+            });
         this.props.switchButton();
         return false;
     }

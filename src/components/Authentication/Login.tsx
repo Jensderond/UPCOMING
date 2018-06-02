@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import axios from 'axios';
 import * as Noty from 'noty';
-import { API_ENDPOINT } from '../utils/api-config'
-import './styles/Sidebar.css';
+import { API_ENDPOINT } from '../../utils/api-config'
+import '../styles/Sidebar.css';
 
 interface IProps {
     title: string;
@@ -80,20 +80,22 @@ class Login extends React.Component<IProps, IState> {
             if ( response.data.success !== true ) {
                 this.setState({
                     errorMessage: response.data.message
-                })
+                });
                 return false;
             }
-            localStorage.setItem("jwtToken", response.data.token);
-            
-            new Noty({
-                text: 'Welcome ' + response.data.username,
-                theme: 'nest',
-                timeout: 3000,
-                type: 'success',
-            }).show();
+            else {
+                localStorage.setItem("jwtToken", response.data.token);
 
-            this.closeModal(event);
-            return true;
+                new Noty({
+                    text: 'Welcome ' + response.data.username,
+                    theme: 'nest',
+                    timeout: 3000,
+                    type: 'success',
+                }).show();
+
+                this.closeModal(event);
+                return true;
+            }
         })
         .catch(() =>{
             this.setState({

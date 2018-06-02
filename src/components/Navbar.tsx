@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Link} from "react-router-dom";
 
 const fontStyle = {
     color: '#85bb65',
@@ -25,7 +26,7 @@ class Navbar extends React.Component<IProps, IState> {
 
         this.state = {
             navbarClass: ""
-        }
+        };
 
         this.handleLoginClick = this.handleLoginClick.bind(this);
         this.handleLogoutClick = this.handleLogoutClick.bind(this);
@@ -57,14 +58,14 @@ class Navbar extends React.Component<IProps, IState> {
         return (
             <nav className="navbar is-transparent">
                 <div className="navbar-brand">
-                    <a className="navbar-item" href="http://localhost:3000/">
+                    <Link className="navbar-item" to="/">
                         <span className="icon" style={ fontStyle }>
                             <i className="fas fa-money-check-alt" />
                         </span>
-                        <span style={{ fontWeight:'bold' }}>
+                            <span style={{ fontWeight:'bold' }}>
                             UPCOMING
                         </span>
-                    </a>
+                    </Link>
                     <div className={ "navbar-burger burger " + this.state.navbarClass } data-target="upcomingNavbar" onClick={ this.toggleMobileMenu }>
                         <span />
                         <span />
@@ -74,12 +75,9 @@ class Navbar extends React.Component<IProps, IState> {
 
                 <div id="upcomingNavbar" className={ "navbar-menu " + this.state.navbarClass }>
                     <div className="navbar-start">
-                    <a className="navbar-item" href="http://localhost:3000/">
-                        Home
-                    </a>
-                    <a className="navbar-item" href="/documentation/overview/start/">
-                        Docs
-                    </a>
+                        {/*<Route exact={true} path='/services/newService' component={NewService} />*/}
+                        <Link className="navbar-item" to="/">Home</Link>
+                        <Link className="navbar-item" to="/services/newService">New Service</Link>
                 
                     </div>
 
