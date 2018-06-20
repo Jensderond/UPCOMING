@@ -99,7 +99,11 @@ class App extends React.Component<{}, IState> {
                 <Route
                     exact={true}
                     path="/services/newService"
-                    component={NewService}
+                    // component={NewService}
+                    // tslint:disable-next-line:jsx-no-lambda
+                    render={() => (
+                        <NewService currency={this.state.currency} />
+                    )}
                 />
                 
               </div>

@@ -72,22 +72,22 @@ class Login extends React.Component<IProps, IState> {
             return false;
         }
 
-        axios.post( API_ENDPOINT + "authenticate", {
-            password: this.state.password,
-            username: this.state.username
+        axios.post( API_ENDPOINT + "auth/local", {
+            identifier: this.state.username,
+            password: this.state.password
         })
         .then( (response) => {
-            if ( response.data.success !== true ) {
+            if ( response.status < 200 && response.status > 300  ) {
                 this.setState({
-                    errorMessage: response.data.message
+                    errorMessage: "Sorry something went wrong."
                 });
                 return false;
             }
             else {
-                localStorage.setItem("jwtToken", response.data.token);
+                localStorage.setItem("jwtToken", response.data.jwt);
 
                 new Noty({
-                    text: 'Welcome ' + response.data.username,
+                    text: 'Welcome ' + response.data.user.username,
                     theme: 'nest',
                     timeout: 3000,
                     type: 'success',
