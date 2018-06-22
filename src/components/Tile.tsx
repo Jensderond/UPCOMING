@@ -6,6 +6,10 @@ const logo = {
   fontSize: '3em' 
 }
 
+const text = {
+    color: 'white'
+}
+
 interface IProps {
     currency: string;
     color: string;
@@ -30,9 +34,9 @@ class Tile extends React.Component<IProps, IState> {
                 <div style= { logo }>
                     <i className="fab fa-spotify" />
                 </div>
-                <p className="title">{ this.props.title }</p>
-                <p className="subtitle">{ this.props.currency } 15</p>
-                <div className="content">
+                <p className="title" style={ text }>{ this.props.title }</p>
+                <p className="subtitle" style={ text }>{ this.props.currency } 15</p>
+                <div className="content" style={ text }>
                     Payment in 3 days..
                 </div>
                 </div>

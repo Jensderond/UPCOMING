@@ -1,5 +1,6 @@
 interface IState {
-    currency: string
+    currency: string,
+    modalState: string
 };
 
 export default IState;

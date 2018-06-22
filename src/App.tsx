@@ -1,47 +1,117 @@
 import * as React from 'react';
 import './App.css';
-import Tile from './components/Tile';
-import IState from './utils/IState';
 
-const fontStyle = {
-  color: '#85bb65',
-  fontSize: '3em' 
-}
+import {BrowserRouter, Route} from 'react-router-dom';
+import Modal from './components/Authentication/Modal';
+import Navbar from './components/Navbar';
+import NewService from "./components/Service/NewService";
+import ServicesList from "./components/ServicesList";
+import { isLoggedIn, logOut } from './utils/helpers/Authentication';
+
+interface IState {
+  currency: string,
+  modalState: string,
+  isLoggedIn: boolean
+};
 
 class App extends React.Component<{}, IState> {
   constructor(props: React.ReactPropTypes) {
     super(props);
     this.state = {
-      currency: "€"
+      currency: "€",
+      isLoggedIn: isLoggedIn(),
+      modalState: ""
     };
+
+    this.checkLogin = this.checkLogin.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.openModal = this.openModal.bind(this);
   }
 
-  public render() {
-    return (
-      <div className="App">
-        
-        <div style= { fontStyle }>
-          <i className="fas fa-money-check-alt" />
-        </div>
-        <section className="section">
-          <div className="container">
-            <h1 className="title">
-              UPCOMING
-            </h1>
-            <p className="subtitle">
-              See where your <strong>Money</strong> is going!
-            </p>
+  public checkLogin() {
+    this.setState({
+      isLoggedIn: isLoggedIn()
+    })
+  }
 
-            <Tile 
-              currency={ this.state.currency } 
-              color="#1ed760"
-              title="Spotify"
-              />
-            
+  public handleLogout() {
+    logOut();
+    this.checkLogin()
+  }
+
+  public openModal(): void {
+    this.setState({
+      modalState: "is-active"
+    });
+  }
+
+  public closeModal(): void {
+    this.checkLogin();
+    this.setState({
+      modalState: ""
+    });
+  }
+
+// REMINDER: use Noty library for notifications!!
+  public render() {
+
+    if ( !this.state.isLoggedIn ){
+      return (
+        <BrowserRouter>
+          <div className="App">
+            <Navbar
+              title="Navbar"
+              openModal={ this.openModal }
+              isLoggedIn={ this.state.isLoggedIn }
+              logOut={ this.handleLogout }
+            />
+            <Modal 
+              title="LOGIN"
+              modalState="is-active"
+              closeModal={ this.closeModal }
+            />
           </div>
-        </section>
-      </div>
-    );
+        </BrowserRouter>
+      );
+    } 
+    else {
+      return (
+        <BrowserRouter>
+          <div className="App">
+            <Navbar
+              title="Navbar"
+              openModal={ this.openModal }
+              isLoggedIn={ this.state.isLoggedIn }
+              logOut={ this.handleLogout }
+            />
+            <section className="section">
+              <div className="container">
+
+                <Route
+                  exact={true}
+                  path="/"
+                  // tslint:disable-next-line:jsx-no-lambda
+                  render={() => (
+                      <ServicesList currency={this.state.currency} />
+                  )}
+                />
+                <Route
+                    exact={true}
+                    path="/services/newService"
+                    // component={NewService}
+                    // tslint:disable-next-line:jsx-no-lambda
+                    render={() => (
+                        <NewService currency={this.state.currency} />
+                    )}
+                />
+                
+              </div>
+            </section>
+          </div>
+        </BrowserRouter>
+      );
+     }
   }
 }
 
