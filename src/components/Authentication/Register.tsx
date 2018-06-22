@@ -115,25 +115,27 @@ class Register extends React.Component<IProps, IState> {
             return false;
         }
 
-        axios.post( API_ENDPOINT + "register", {
+        axios.post( API_ENDPOINT + "auth/local/register", {
             email: this.state.email,
             password: this.state.password,
             username: this.state.username
         })
             .then( (response) => {
-                if ( response.data.success !== true ) {
+                if ( response.data.user === null ) {
                     this.setState({
                         errorMessage: response.data.message
-                    })
+                    });
                     return false;
                 }
 
                 new Noty({
-                    text: 'Welcome ' + response.data.username,
+                    text: 'Welcome ' + response.data.user.username,
                     theme: 'nest',
                     timeout: 3000,
                     type: 'success',
                 }).show();
+
+                localStorage.setItem("jwtToken", response.data.jwt);
 
                 this.closeModal(event);
                 return true;

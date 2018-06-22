@@ -56,7 +56,7 @@ class Navbar extends React.Component<IProps, IState> {
 
     public render() {
         return (
-            <nav className="navbar is-transparent">
+            <nav className="navbar is-dark">
                 <div className="navbar-brand">
                     <Link className="navbar-item" to="/">
                         <span className="icon" style={ fontStyle }>
@@ -86,7 +86,7 @@ class Navbar extends React.Component<IProps, IState> {
                             <div className="navbar-item">
                                 <div className="field is-grouped">
                                 <p className="control">
-                                    <a className="button is-warning" onClick={ this.handleLogoutClick } data-id="LOGOUT">
+                                    <a className="button is-primary" onClick={ this.handleLogoutClick } data-id="LOGOUT">
                                         <span>Logout</span>
                                     </a>            
                                 </p>

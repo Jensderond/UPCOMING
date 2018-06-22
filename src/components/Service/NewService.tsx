@@ -30,7 +30,7 @@ class NewService extends React.Component<IProps, IState> {
             color: "",
             colorClass: "",
             date: new Date(),
-            defaultColors: ['#b9090b', '#7bdbc7', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB'],
+            defaultColors: ['#b9090b', '#7bdbc7', '#FCCB00', '#1ed760', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB'],
             description: "",
             errorMessage: "",
             name: "",
@@ -90,10 +90,6 @@ class NewService extends React.Component<IProps, IState> {
             errorMessage: ""
         })
     }
-
-
-
-
 
     public render() {
         const errorMessage = this.state.errorMessage;
