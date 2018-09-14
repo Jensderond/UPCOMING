@@ -1,5 +1,8 @@
 ![](https://travis-ci.org/Jensderond/UPCOMING.svg?branch=master)
 # UPCOMING
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Jensderond/UPCOMING.svg)](https://greenkeeper.io/)
+
 ### React app to manage your reacuring subscriptions 
 
 ---
