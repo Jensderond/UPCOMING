@@ -1,3 +1,4 @@
+![](https://travis-ci.org/Jensderond/UPCOMING.svg?branch=master)
 # UPCOMING
 ### React app to manage your reacuring subscriptions 
 
