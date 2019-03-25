@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.6.0",
-    "@types/react-color": "^2.13.5",
+    "@types/react-color": "^3.0.0",
     "@types/react-router-dom": "^4.2.6",
     "axios": "^0.18.0",
     "bulma": "^0.7.1",
